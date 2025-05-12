@@ -17,6 +17,9 @@
             <li><a href="#services">Services</a></li>
             <li><a href="#portfolio">Portfolio</a></li>
             <li><a href="#contact">Contact</a></li>
+            <li><button id="theme-toggle" class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button></li>
         </ul>
     </nav>
 
@@ -117,5 +120,29 @@
             <p>&copy; 2024 Sssssazabi. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const themeIcon = themeToggle.querySelector('i');
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        htmlElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            themeIcon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+    </script>
 </body>
 </html>
