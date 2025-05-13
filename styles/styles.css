@@ -1,27 +1,26 @@
 /* Base Styles */
 :root {
     /* Light theme (default) */
-    --primary-color: #2563eb;
-    --secondary-color: #1e40af;
+    --primary-color: #730e07;
+    --secondary-color: #8f1109;
     --text-color: #1f2937;
     --light-text: #6b7280;
     --background: #ffffff;
-    --section-bg: #f3f4f6;
-    --card-shadow: rgba(0,0,0,0.1);
-    --form-border: #ddd;
+    --section-bg: #fff5f4;
+    --card-shadow: rgba(115,14,7,0.1);
+    --form-border: #ffded9;
 }
 
 [data-theme="dark"] {
-    --primary-color: #60a5fa;
-    --secondary-color: #3b82f6;
+    --primary-color: #ff2213;
+    --secondary-color: #ff453a;
     --text-color: #f3f4f6;
     --light-text: #d1d5db;
-    --background: #111827;
-    --section-bg: #1f2937;
-    --card-shadow: rgba(0,0,0,0.3);
-    --form-border: #374151;
+    --background: #1a0404;
+    --section-bg: #2d0806;
+    --card-shadow: rgba(115,14,7,0.3);
+    --form-border: #4d0d08;
 }
-
 
 * {
     margin: 0;
@@ -41,18 +40,54 @@ body {
     top: 0;
     width: 100%;
     padding: 1rem 5%;
-    background: var(--background);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background: transparent;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 1000;
+    transition: background-color 0.3s ease;
+}
+
+.navbar.scrolled {
+    background: var(--background);
+    box-shadow: 0 2px 4px var(--card-shadow);
 }
 
 .nav-brand {
     font-size: 1.5rem;
     font-weight: bold;
+    color: #f3f4f6;
+    transition: color 0.3s;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: #f3f4f6;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    color: #f3f4f6;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    transition: color 0.3s;
+}
+
+/* Add styles for when navbar is scrolled */
+.navbar.scrolled .nav-brand {
     color: var(--primary-color);
+}
+
+.navbar.scrolled .nav-menu a {
+    color: var(--text-color);
+}
+
+.navbar.scrolled .theme-toggle {
+    color: var(--text-color);
 }
 
 .nav-menu {
@@ -88,10 +123,11 @@ body {
 }
 
 /* Update these existing styles to use new variables */
-.navbar {
+/* Remove or comment out this duplicate navbar style */
+/* .navbar {
     background: var(--background);
     box-shadow: 0 2px 4px var(--card-shadow);
-}
+} */
 
 body {
     background-color: var(--background);

@@ -17,14 +17,21 @@ class Particle {
     }
 
     draw(ctx) {
+        // Add glow effect
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = '#f3f4f6';
+        
         ctx.fillStyle = '#f3f4f6';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.closePath();
         ctx.fill();
+        
+        // Reset shadow effect to prevent affecting other drawings
+        ctx.shadowBlur = 0;
     }
 
-    update(centerX, centerY) {
+    update(centerX, centerY, mouseX, mouseY, transitionFactor) {
         // Update particle position in circular motion with individual speed
         this.angle += this.speed;
         
@@ -36,8 +43,28 @@ class Particle {
         let orbitY = centerY + Math.sin(this.angle) * this.radius;
         
         // Add oscillation effect
-        this.x = orbitX + Math.cos(this.oscillationAngle) * this.oscillationAmplitude;
-        this.y = orbitY + Math.sin(this.oscillationAngle) * this.oscillationAmplitude;
+        let baseX = orbitX + Math.cos(this.oscillationAngle) * this.oscillationAmplitude;
+        let baseY = orbitY + Math.sin(this.oscillationAngle) * this.oscillationAmplitude;
+
+        // Add parallax effect based on mouse position with smooth transition
+        if (mouseX !== undefined && mouseY !== undefined) {
+            const dx = mouseX - centerX;
+            const dy = mouseY - centerY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const maxDistance = Math.sqrt(centerX * centerX + centerY * centerY);
+            const parallaxStrength = 0.15;
+
+            const parallaxX = (dx / maxDistance) * this.radius * parallaxStrength;
+            const parallaxY = (dy / maxDistance) * this.radius * parallaxStrength;
+
+            // Apply transition factor for smooth movement
+            this.x = baseX + (parallaxX * transitionFactor);
+            this.y = baseY + (parallaxY * transitionFactor);
+        } else {
+            // Smoothly transition back to base position
+            this.x = baseX + (this.x - baseX) * transitionFactor;
+            this.y = baseY + (this.y - baseY) * transitionFactor;
+        }
     }
 }
 
@@ -46,13 +73,33 @@ class ParticleSystem {
         this.canvas = document.getElementById('heroCanvas');
         this.ctx = this.canvas.getContext('2d');
         this.particles = [];
-        this.numberOfParticles = 150; // Increased number of particles
+        this.numberOfParticles = 150;
+        this.mouseX = undefined;
+        this.mouseY = undefined;
+        this.transitionFactor = 0;
+        this.targetTransitionFactor = 0;
         
         this.resize();
         this.init();
+        this.setupMouseTracking();
         this.animate();
 
         window.addEventListener('resize', () => this.resize());
+    }
+
+    setupMouseTracking() {
+        this.canvas.addEventListener('mousemove', (e) => {
+            const rect = this.canvas.getBoundingClientRect();
+            this.mouseX = e.clientX - rect.left;
+            this.mouseY = e.clientY - rect.top;
+            this.targetTransitionFactor = 1;
+        });
+
+        this.canvas.addEventListener('mouseleave', () => {
+            this.mouseX = undefined;
+            this.mouseY = undefined;
+            this.targetTransitionFactor = 0;
+        });
     }
 
     resize() {
@@ -74,10 +121,13 @@ class ParticleSystem {
     animate() {
         requestAnimationFrame(() => this.animate());
         
-        this.ctx.fillStyle = '#282741';
+        // Update transition factor with easing
+        this.transitionFactor += (this.targetTransitionFactor - this.transitionFactor) * 0.05;
+        
+        this.ctx.fillStyle = '#000000';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Draw connecting lines with increased distance threshold
+        // Draw connecting lines
         this.ctx.strokeStyle = 'rgba(243, 244, 246, 0.1)';
         this.ctx.lineWidth = 0.5;
         
@@ -87,7 +137,7 @@ class ParticleSystem {
                 const dy = this.particles[i].y - this.particles[j].y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 
-                if(distance < 150) { // Increased connection distance
+                if(distance < 150) {
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
                     this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
@@ -96,17 +146,20 @@ class ParticleSystem {
             }
         }
 
-        // Update and draw particles
+        // Update and draw particles with mouse position and transition factor
         this.particles.forEach(particle => {
-            particle.update(this.centerX, this.centerY);
+            particle.update(this.centerX, this.centerY, this.mouseX, this.mouseY, this.transitionFactor);
             particle.draw(this.ctx);
         });
 
         // Draw center point
+        this.ctx.shadowBlur = 20;
+        this.ctx.shadowColor = '#f3f4f6';
         this.ctx.fillStyle = '#f3f4f6';
         this.ctx.beginPath();
         this.ctx.arc(this.centerX, this.centerY, 4, 0, Math.PI * 2);
         this.ctx.fill();
+        this.ctx.shadowBlur = 0;
     }
 }
 
@@ -114,8 +167,3 @@ class ParticleSystem {
 document.addEventListener('DOMContentLoaded', () => {
     new ParticleSystem();
 });
-
-// Remove this duplicate initialization
-// document.addEventListener('DOMContentLoaded', () => {
-//     new CanvasAnimation();
-// });

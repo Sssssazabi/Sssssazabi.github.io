@@ -10,7 +10,7 @@
 <body>
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="nav-brand">Sssssazabi</div>
+        <div class="nav-brand">A-Znable.</div>
         <ul class="nav-menu">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
@@ -27,8 +27,8 @@
     <section id="home" class="hero">
         <canvas id="heroCanvas"></canvas>
         <div class="hero-content">
-            <h1>Hi, I'm Sssssazabi</h1>
-            <p class="subtitle">Web & Game Developer</p>
+            <h1>BAZINGA.</h1>
+            <p class="subtitle">I am Aznable~.</p>
             <p class="description">Specializing in design, web, and gaming solutions for Web2 and Web3 projects</p>
             <a href="#contact" class="cta-button">Get in Touch</a>
         </div>
@@ -49,6 +49,32 @@
                     <span>UI/UX Design</span>
                     <span>Web3</span>
                     <span>Blockchain</span>
+                    <span>HTML</span>
+                    <span>CSS</span>
+                    <span>JavaScript</span>
+                    <span>C#</span>
+                    <span>C++</span>
+                    <span>SQL</span>
+                    <span>PHP</span>
+                    <span>Java</span>
+                    <span>React</span>
+                    <span>Unity</span>
+                    <span>Unreal Engine</span>
+                    <span>Figma</span>
+                    <span>Adobe Photoshop</span>
+                    <span>Adobe Illustrator</span>
+                    <span>Adobe Premiere</span>
+                    <span>Adobe After Effects</span>
+                    <span>Adobe Indesign</span>
+                    <span>Adobe Lightroom</span>
+                    <span>Customer Service</span>
+                    <span>Project Management</span>
+                    <span>Team Collaboration</span>
+                    <span>Problem Solving</span>
+                    <span>Communication</span>
+                    <span>Creativity</span>
+                    <span>Attention to Detail</span>
+                    <span>Leadership</span>
                 </div>
             </div>
         </div>
@@ -139,9 +165,20 @@
 
     <script src="scripts/canvas.js"></script>
     <script>
+        // Theme toggle functionality
         const themeToggle = document.getElementById('theme-toggle');
         const htmlElement = document.documentElement;
         const themeIcon = themeToggle.querySelector('i');
+
+        // Add scroll event handler for navbar
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
 
         // Check for saved theme preference
         const savedTheme = localStorage.getItem('theme') || 'light';
@@ -160,6 +197,22 @@
         function updateThemeIcon(theme) {
             themeIcon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
         }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>
